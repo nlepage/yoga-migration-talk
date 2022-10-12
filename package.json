@@ -1,6 +1,5 @@
 {
   "name": "yoga-migration-talk",
-  "version": "0.0.0",
   "repository": "https://github.com?nlepage/yoga-migration-talk",
   "author": {
     "name": "Nicolas Lepage",
@@ -16,6 +15,7 @@
   },
   "dependencies": {
     "@slidev/cli": "^0.36.5",
+    "@slidev/theme-apple-basic": "*",
     "@slidev/theme-default": "*",
     "postcss": "^8.4.17",
     "vite": "^3.1.4",

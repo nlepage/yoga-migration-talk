@@ -647,6 +647,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@slidev/theme-apple-basic@npm:*":
+  version: 0.20.0
+  resolution: "@slidev/theme-apple-basic@npm:0.20.0"
+  dependencies:
+    "@slidev/types": ^0.22.7
+    codemirror-theme-vars: ^0.1.1
+    prism-theme-vars: ^0.2.2
+    theme-vitesse: ^0.1.12
+  checksum: 82b5be664be26e71901bb21c88b71873f8e36399956f8d2538353d9b1d2b5e297be98be4c04909d1c7254c2760b05e4979fe24667aaadf6213b5464ace608c32
+  languageName: node
+  linkType: hard
+
 "@slidev/theme-default@npm:*":
   version: 0.21.2
   resolution: "@slidev/theme-default@npm:0.21.2"
@@ -5482,6 +5494,7 @@ __metadata:
     "@iconify-json/carbon": "npm:^1.1.7"
     "@iconify-json/ph": "npm:^1.1.2"
     "@slidev/cli": ^0.36.5
+    "@slidev/theme-apple-basic": "*"
     "@slidev/theme-default": "*"
     postcss: ^8.4.17
     vite: ^3.1.4

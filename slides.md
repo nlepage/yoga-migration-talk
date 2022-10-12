@@ -1,5 +1,5 @@
 ---
-theme: default
+theme: apple-basic
 highlighter: shiki
 lineNumbers: false
 info: |
@@ -11,12 +11,43 @@ drawings:
   persist: false
 css: unocss
 
-# background: https://source.unsplash.com/collection/94734566/1920x1080
-# class: 'text-center'
-layout: cover
+layout: intro
 ---
 
-# Comment j'ai largué<br>Apollo Server<br>pour GraphQL Yoga
+<h1 class="text-center">
+  Comment j'ai largué<br>Apollo Server<br>pour GraphQL Yoga
+</h1>
+
+<p class="!mt-4 text-center">
+  <img src="/nicolas-lepage.jpg" class="rounded-full shadow-md inline w-25 mr-4" />
+  Nicolas Lepage - <a href="https://twitter.com/njblepage">@njblepage</a>
+</p>
+
+<p class="!mt-8 text-center">
+  <img src="/devfest.png" class="inline w-60 mr-10" />
+  <img src="/zenika.png" class="inline w-60" />
+</p>
+
+---
+layout: bullets
+---
+
+# Le projet
+
+<v-clicks>
+
+ - Développé par Zenika Nantes
+ - Pour l'Institut Catholique de Vendée
+ - Application de gestion (comptabilité, dossiers étudiants, examens...)
+ - Démarré en 2017
+
+</v-clicks>
+
+<style>
+ul {
+  font-size: 150%;
+}
+</style>
 
 ---
 
