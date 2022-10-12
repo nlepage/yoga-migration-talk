@@ -1,51 +1,65 @@
 ---
-# try also 'default' to start simple
 theme: default
-# random image from a curated Unsplash collection by Anthony
-# like them? see https://unsplash.com/collections/94734566/slidev
-background: https://source.unsplash.com/collection/94734566/1920x1080
-# apply any windi css classes to the current slide
-class: 'text-center'
-# https://sli.dev/custom/highlighters.html
 highlighter: shiki
-# show line numbers in code blocks
 lineNumbers: false
-# some information about the slides, markdown enabled
 info: |
   ## Slidev Starter Template
   Presentation slides for developers.
 
   Learn more at [Sli.dev](https://sli.dev)
-# persist drawings in exports and build
 drawings:
   persist: false
-# use UnoCSS
 css: unocss
+
+# background: https://source.unsplash.com/collection/94734566/1920x1080
+# class: 'text-center'
+layout: cover
 ---
 
-# Welcome to Slidev
+# Comment j'ai largué<br>Apollo Server<br>pour GraphQL Yoga
 
-Presentation slides for developers
+---
 
-<div class="pt-12">
-  <span @click="$slidev.nav.next" class="px-2 py-1 rounded cursor-pointer" hover="bg-white bg-opacity-10">
-    Press Space for next page <carbon:arrow-right class="inline"/>
-  </span>
-</div>
+## GraphQL Yoga v1
 
-<div class="abs-br m-6 flex gap-2">
-  <button @click="$slidev.nav.openInEditor()" title="Open in Editor" class="text-xl icon-btn opacity-50 !border-none !hover:text-white">
-    <carbon:edit />
-  </button>
-  <a href="https://github.com/slidevjs/slidev" target="_blank" alt="GitHub"
-    class="text-xl icon-btn opacity-50 !border-none !hover:text-white">
-    <carbon-logo-github />
-  </a>
-</div>
+v1 en 2018
 
-<!--
-The last comment block of each slide will be treated as slide notes. It will be visible and editable in Presenter Mode along with the slide. [Read more in the docs](https://sli.dev/guide/syntax.html#notes)
--->
+Dernière version en 2019
+
+Fully featured :
+ - file upload
+ - subscriptions
+ - playground
+
+---
+
+## Apollo server
+
+v2 sortie en juillet 2018
+
+v3 sortie 7 juillet 2021, un jour après mon anniversaire
+
+---
+
+## ICES
+
+Apollo server v1
+
+Puis Apollo server v2 avant même sa sortie en juillet 2018
+
+Plus d'une centaine de queries
+Plus d'une centaine de mutations
+Plusieurs centaines de types
+
+ - Uploads de fichier
+ - Subscriptions over WebSockets
+ - 
+
+---
+
+## Apollo server v3
+
+
 
 ---
 
