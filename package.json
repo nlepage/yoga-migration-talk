@@ -11,18 +11,19 @@
   "scripts": {
     "build": "slidev build",
     "dev": "slidev --open",
-    "export": "slidev export"
-  },
-  "dependencies": {
-    "@slidev/cli": "^0.36.5",
-    "@slidev/theme-apple-basic": "*",
-    "@slidev/theme-default": "*",
-    "postcss": "^8.4.17",
-    "vite": "^3.1.4",
-    "vue": "^3.2.40"
+    "export": "slidev export",
+    "serve": "serve dist"
   },
   "devDependencies": {
     "@iconify-json/carbon": "npm:^1.1.7",
-    "@iconify-json/ph": "npm:^1.1.2"
+    "@iconify-json/ph": "npm:^1.1.2",
+    "@slidev/cli": "^0.36.5",
+    "@slidev/theme-apple-basic": "*",
+    "@slidev/theme-default": "*",
+    "playwright-chromium": "^1.27.1",
+    "postcss": "^8.4.17",
+    "serve": "^14.0.1",
+    "vite": "^3.1.4",
+    "vue": "^3.2.40"
   }
 }

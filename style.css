@@ -1,0 +1,41 @@
+@font-face {
+  font-family: 'Almendra';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(Almendra-Regular.ttf) format('woff2');
+}
+
+@font-face {
+  font-family: 'Almendra';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url(Almendra-Bold.ttf) format('woff2');
+}
+
+.font-devfest {
+  font-family: 'Almendra';
+}
+
+h1, h2, h3 {
+  font-family: 'Almendra';
+}
+
+h1, h2, h3, p, ul {
+  color: #1c4241;
+}
+
+.slidev-layout:not(.end) {
+  background-image: url(background-default.jpg);
+  background-size: contain;
+  height: 100%;
+}
+
+.background-leafs {
+  background-image: url(background-leafs.jpg) !important;
+}
+
+.background-clouds {
+  background-image: url(background-clouds.jpg) !important;
+}
