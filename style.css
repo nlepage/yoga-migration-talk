@@ -26,7 +26,7 @@ h1, h2, h3, p, ul {
   color: #1c4241;
 }
 
-.slidev-layout:not(.end) {
+.slidev-layout:not(.end):not(.slidev-info-dialog) {
   background-image: url(background-default.jpg);
   background-size: contain;
   height: 100%;

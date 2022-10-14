@@ -2,14 +2,14 @@
 theme: apple-basic
 highlighter: shiki
 lineNumbers: false
+title: Comment j'ai largué Apollo Server pour GraphQL Yoga
+colorSchema: light
 info: |
-  ## Slidev Starter Template
-  Presentation slides for developers.
+  ## Comment j'ai largué Apollo Server pour GraphQL Yoga
 
-  Learn more at [Sli.dev](https://sli.dev)
+  [Sources](https://github.com/nlepage/yoga-migration-talk)
 css: unocss
-defaults:
-  class: background-default bg-contain h-full
+routerMode: hash
 download: true
 
 layout: intro
@@ -55,17 +55,77 @@ ul {
 
 # Le projet
 
-Schéma technique
+<p class="text-center">
+  <img src="/schema-projet.png" width="500" class="inline w-130">
+</p>
 
 ---
 
-# L'API
+# GraphQL <img src="/graphql.png" class="inline w-12 ml-2">
 
- - Plus d'une centaine de queries
- - Plus d'une centaine de mutations
- - Plusieurs centaines de types
- - Uploads de fichier
- - Subscriptions over WebSockets
+<div class="flex gap-10">
+
+```graphql
+query getStudents {
+  students {
+    id, firstName, lastName
+    grades {
+      id, grade
+      subject {
+        id, name
+      }
+    }
+  }
+}
+```
+
+```graphql
+type Student {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  grades: [Grade!]!
+}
+
+type Grade {
+  id: ID!
+  grade: Float!
+  subject: Subject!
+}
+```
+
+</div>
+
+ - Langage de requêtage + Schéma
+ - Environnement d'exécution
+ - Spécification opensource
+
+
+<style>
+.slidev-code-wrapper {
+  flex: 1;
+}
+
+ul {
+  font-size: 140%;
+}
+</style>
+
+---
+layout: bullets
+---
+
+# L'API GraphQL
+
+ - +100 queries, +100 mutations, +200 types
+ - Quelques subscriptions
+ - Uploads de fichier ?
+
+<style>
+ul {
+  font-size: 140%;
+}
+</style>
 
 ---
 
@@ -131,3 +191,16 @@ FIXME migration (how to selon la doc)
 
  - Directives customs
  - TODO
+
+---
+layout: intro
+class: background-clouds
+---
+
+<h1 class="text-center">
+  Merci !
+</h1>
+
+<p class="text-center !mt-10">
+  <img class="inline" src="/qrcode.png">
+</p>
