@@ -115,11 +115,12 @@ ul {
 layout: bullets
 ---
 
-# L'API GraphQL
+# L'API GraphQL du projet
 
- - +100 queries, +100 mutations, +200 types
+ - +100 queries, +100 mutations, +250 types
  - Quelques subscriptions
- - Uploads de fichier ?
+ - Upload de fichiers
+ - D'abord Apollo Server v1 puis v2
 
 <style>
 ul {
@@ -129,32 +130,18 @@ ul {
 
 ---
 
-# Historique de l'API
+# Historique de l'écosystème
 
-Apollo server v1
-
-Puis Apollo server v2 avant même sa sortie en juillet 2018
-
-Resté dessus depuis
-
----
-
-# Historique écosystème
-
-Yoga v1 (Fully featured, file upload, subscriptions, playground) :
- - Démarré en 2018
- - Dernière version en 2019
-
-Apollo server :
- - v2 sortie en juillet 2018
- - v3 sortie 7 juillet 2021, un jour après mon anniversaire
-
-Mentionner express-graphql
+<p class="text-center !mt-15">
+  <img src="/frise.png" class="inline">
+</p>
 
 <!--
-Dire pqoi on est passé sur Apollo 3
+ - Yoga v1 (Fully featured, file upload, subscriptions, playground)
+ - pas passé sur Apollo 3
+ - Mentionner express-graphql
 
-Transition sur envelop
+Transition sur Envelop ?
 -->
 
 ---
