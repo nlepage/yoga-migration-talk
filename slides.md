@@ -31,7 +31,7 @@ class: background-leafs
 </p>
 
 <!--
-Dire Namaste au lieu de Bonjour
+Namaste
 -->
 
 ---
@@ -58,6 +58,10 @@ ul {
 <p class="text-center">
   <img src="/schema-projet.png" width="500" class="inline w-130">
 </p>
+
+<!--
+ - Microservice au départ, inadapté pour petite équipe (overhead)
+-->
 
 ---
 
@@ -145,12 +149,38 @@ Transition sur Envelop ?
 -->
 
 ---
+layout: bullets
+---
 
-# Envelop
+# Envelop <img src="/envelop.svg" class="inline ml-2 w-12">
 
-TODO présenter envelop
+ - Démarré début 2021
+ - Système de plugins pour GraphQL
+ - *Framework agnostic*
+
+<style>
+ul {
+  font-size: 140%;
+}
+</style>
 
 <!--
+ - 1ère release majeur en juillet 2021
+ - plugins utilisables avec nimp quel framework de server ou schéma
+-->
+
+---
+
+# Envelop <img src="/envelop.svg" class="inline ml-2 w-12">
+
+<p class="text-center">
+  <img src="/schema-envelop.png" class="inline w-130">
+</p>
+
+<!--
+ - wrap pipeline execution
+ - no http
+ - flexibilité max
 Mentionner Helix
 
 Problème un peu trop bas niveau -> transition Yoga
