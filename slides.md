@@ -65,7 +65,7 @@ ul {
 
 ---
 
-# GraphQL <img src="/graphql.png" class="inline w-12 ml-2">
+# <img src="/graphql.png" class="inline w-12 mr-2"> GraphQL
 
 <div class="flex gap-10">
 
@@ -152,7 +152,7 @@ Transition sur Envelop ?
 layout: bullets
 ---
 
-# Envelop <img src="/envelop.svg" class="inline ml-2 w-12">
+# <img src="/envelop.svg" class="inline mr-2 w-12"> GraphQL Envelop
 
  - Démarré début 2021
  - Système de plugins pour GraphQL
@@ -171,7 +171,7 @@ ul {
 
 ---
 
-# Envelop <img src="/envelop.svg" class="inline ml-2 w-12">
+# <img src="/envelop.svg" class="inline mr-2 w-12"> GraphQL Envelop
 
 <p class="text-center">
   <img src="/schema-envelop.png" class="inline w-130">
@@ -185,7 +185,15 @@ ul {
 
 ---
 
-# Envelop <img src="/envelop.svg" class="inline ml-2 w-12">
+# <img src="/envelop.svg" class="inline mr-2 w-12"> GraphQL Envelop
+
+<p class="text-center">
+  <img src="/envelop-hub.png" class="inline w-180 shadow-lg">
+</p>
+
+---
+
+# <img src="/envelop.svg" class="inline mr-2 w-12"> GraphQL Envelop
 
 ```js
 import { envelop, useSchema } from '@envelop/core'
@@ -210,7 +218,7 @@ code {
 
 ---
 
-# Envelop <img src="/envelop.svg" class="inline ml-2 w-12">
+# <img src="/envelop.svg" class="inline mr-2 w-12"> GraphQL Envelop
 
 ```js
 import { createServer } from 'node:http'
@@ -238,7 +246,7 @@ code {
 
 ---
 
-# Envelop <img src="/envelop.svg" class="inline ml-2 w-12">
+# <img src="/envelop.svg" class="inline mr-2 w-12"> GraphQL Envelop
 
 ```js
 const { query, variables } = JSON.parse(req.body)
@@ -254,7 +262,7 @@ const result = await execute({
   document,
   schema,
   variableValues: variables,
-  contextValue
+  contextValue,
 })
 
 res.end(JSON.stringify(result))
@@ -272,20 +280,45 @@ code {
 -->
 
 ---
+layout: bullets
+---
 
-# Yoga
+# <img src="/yoga.svg" class="inline mr-2 w-12"> GraphQL Yoga
 
-TODO présenter Yoga
+ - Serveur GraphQL *fully featured*
+ - Extensible
+ - Facile à mettre en place
+
+<style>
+ul {
+  font-size: 140%;
+}
+</style>
 
 <!--
+ - Fully featured
+  - Subscriptions out of the box
+  - Upload de fichier (sans ajout dépendance)
+  - Playground
+ - Facile à mettre en place
+  - pas adhérence fmk http
+  - tt type env (lambdas aws, workers cloudfare, SSR Next.js)
+
 Alors c'est décidé ▶
 -->
 
 ---
 
-# Je largue Apollo Server !
+# <img src="/yoga.svg" class="inline mr-2 w-12"> GraphQL Yoga
 
-FIXME migration (how to selon la doc)
+TODO
+
+---
+layout: fact
+class: background-clouds
+---
+
+# Je largue<br>Apollo Server !
 
 ---
 
