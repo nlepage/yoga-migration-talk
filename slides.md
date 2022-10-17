@@ -185,7 +185,7 @@ ul {
 
 ---
 
-# <img src="/envelop.svg" class="inline mr-2 w-12"> GraphQL Envelop
+# <img src="/envelop.svg" class="inline mr-2 w-12"> GraphQL Envelop - Plugins
 
 <p class="text-center">
   <img src="/envelop-hub.png" class="inline w-180 shadow-lg">
@@ -193,7 +193,22 @@ ul {
 
 ---
 
-# <img src="/envelop.svg" class="inline mr-2 w-12"> GraphQL Envelop
+# <img src="/envelop.svg" class="inline mr-2 w-12"> GraphQL Envelop - Plugins
+
+ - `onPluginInit`
+ - `onEnveloped`
+ - `onParse`
+ - `onValidate`
+ - `onContext`
+ - `useExtendedValidation`
+ - `onExecute`
+ - `onSubscribe`
+ - `onSchemaChange`
+ - ~~`onResolverCalled`~~ => `useOnResolve`
+
+---
+
+# <img src="/envelop.svg" class="inline mr-2 w-12"> GraphQL Envelop - Construire un serveur
 
 ```js
 import { envelop, useSchema } from '@envelop/core'
@@ -218,7 +233,7 @@ code {
 
 ---
 
-# <img src="/envelop.svg" class="inline mr-2 w-12"> GraphQL Envelop
+# <img src="/envelop.svg" class="inline mr-2 w-12"> GraphQL Envelop - Construire un serveur
 
 ```js
 import { createServer } from 'node:http'
@@ -246,7 +261,7 @@ code {
 
 ---
 
-# <img src="/envelop.svg" class="inline mr-2 w-12"> GraphQL Envelop
+# <img src="/envelop.svg" class="inline mr-2 w-12"> GraphQL Envelop - Construire un serveur
 
 ```js
 const { query, variables } = JSON.parse(req.body)
@@ -285,6 +300,7 @@ layout: bullets
 
 # <img src="/yoga.svg" class="inline mr-2 w-12"> GraphQL Yoga
 
+ - Démarré début 2022
  - Serveur GraphQL *fully featured*
  - Extensible
  - Facile à mettre en place
@@ -296,6 +312,8 @@ ul {
 </style>
 
 <!--
+ - Lien Yoga v1
+ - 1ère majeure fin mars
  - Fully featured
   - Subscriptions out of the box
   - Upload de fichier (sans ajout dépendance)
