@@ -181,9 +181,94 @@ ul {
  - wrap pipeline execution
  - no http
  - flexibilité max
-Mentionner Helix
+-->
 
-Problème un peu trop bas niveau -> transition Yoga
+---
+
+# Envelop <img src="/envelop.svg" class="inline ml-2 w-12">
+
+```js
+import { envelop, useSchema } from '@envelop/core'
+import { useParserCache } from '@envelop/parser-cache'
+import { useValidationCache } from '@envelop/validation-cache'
+import { schema } from './schema
+ 
+export const getEnveloped = envelop({
+  plugins: [
+    useSchema(schema),
+    useParserCache(),
+    useValidationCache()
+  ]
+})
+```
+
+<style>
+code {
+  font-size: 140%;
+}
+</style>
+
+---
+
+# Envelop <img src="/envelop.svg" class="inline ml-2 w-12">
+
+```js
+import { createServer } from 'node:http'
+import { GraphQLError } from 'graphql'
+import { getEnveloped } from './envelop'
+ 
+const httpServer = createServer(async (req, res) => {
+  const {
+    parse,
+    validate,
+    contextFactory,
+    execute,
+    schema
+  } = getEnveloped({ req })
+
+  // ...
+})
+```
+
+<style>
+code {
+  font-size: 140%;
+}
+</style>
+
+---
+
+# Envelop <img src="/envelop.svg" class="inline ml-2 w-12">
+
+```js
+const { query, variables } = JSON.parse(req.body)
+const document = parse(query)
+const validationErrors = validate(schema, document)
+
+if (validationErrors.length > 0) {
+  return res.end(JSON.stringify({ errors: validationErrors }))
+}
+
+const contextValue = await contextFactory()
+const result = await execute({
+  document,
+  schema,
+  variableValues: variables,
+  contextValue
+})
+
+res.end(JSON.stringify(result))
+```
+
+<style>
+code {
+  font-size: 140%;
+}
+</style>
+
+<!--
+ - plus simple Helix
+ - Trop bas niveau -> transition Yoga
 -->
 
 ---
