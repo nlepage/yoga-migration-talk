@@ -321,15 +321,39 @@ ul {
  - Facile à mettre en place
   - pas adhérence fmk http
   - tt type env (lambdas aws, workers cloudfare, SSR Next.js)
-
-Alors c'est décidé ▶
 -->
 
 ---
 
 # <img src="/yoga.svg" class="inline mr-2 w-12"> GraphQL Yoga
 
-TODO
+```js
+import { createServer } from 'node:http'
+import { createYoga } from 'graphql-yoga'
+import { useGraphQlJit } from '@envelop/graphql-jit'
+import { schema } from './schema'
+
+const yoga = createYoga({
+  schema,
+  plugins: [useGraphQlJit()],
+})
+
+const server = createServer(yoga)
+
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
+```
+
+<style>
+code {
+  font-size: 140%;
+}
+</style>
+
+<!--
+Alors c'est décidé ▶
+-->
 
 ---
 layout: fact
@@ -340,10 +364,48 @@ class: background-clouds
 
 ---
 
-# Adhérence avec Apollo Server
+# La migration (sur le papier)
+
+```diff
+- import { ApolloServer } from 'apollo-server'
++ import { createServer } from 'node:http'
++ import { createYoga } from 'graphql-yoga'
++ import { useApolloServerErrors } from '@envelop/apollo-server-errors'
+import { schema } from './schema'
+ 
+- const server = new ApolloServer({
++ const yoga = createYoga({
+  schema,
++  plugins: [useApolloServerErrors()],
+})
+ 
++ const server = createServer(yoga)
+ 
+server.listen(4000)
+```
+
+<style>
+code {
+  font-size: 140%;
+}
+</style>
+
+---
+layout: bullets
+---
+
+# Adhérences avec Apollo Server
 
  - Directives customs
- - TODO
+ - Subscriptions ?
+ - Batch HTTP
+ - Resolvers génératrice ?!
+
+<style>
+ul {
+  font-size: 140%;
+}
+</style>
 
 ---
 layout: intro
