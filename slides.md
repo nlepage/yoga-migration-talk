@@ -204,13 +204,15 @@ ul {
 # <img src="/envelop.svg" class="inline mr-2 w-12"> GraphQL Envelop - Construire un serveur
 
 ```js
-import { envelop, useSchema } from '@envelop/core'
+import * as GraphQLJS from 'graphql'
+import { envelop, useEngine, useSchema } from '@envelop/core'
 import { useParserCache } from '@envelop/parser-cache'
 import { useValidationCache } from '@envelop/validation-cache'
 import { schema } from './schema
  
 export const getEnveloped = envelop({
   plugins: [
+    useEngine(GraphQLJS),
     useSchema(schema),
     useParserCache(),
     useValidationCache()
@@ -364,17 +366,17 @@ class: background-clouds
 + import { createServer } from 'node:http'
 + import { createYoga } from 'graphql-yoga'
 + import { useApolloServerErrors } from '@envelop/apollo-server-errors'
-import { schema } from './schema'
+  import { schema } from './schema'
  
 - const server = new ApolloServer({
 + const yoga = createYoga({
-  schema,
-+  plugins: [useApolloServerErrors()],
-})
+    schema,
++   plugins: [useApolloServerErrors()],
+  })
  
 + const server = createServer(yoga)
  
-server.listen(4000)
+  server.listen(4000)
 ```
 
 <style>
@@ -702,6 +704,70 @@ ul {
 TODO
 
 ---
+
+# Subscriptions - PubSub
+
+```diff
+- import { PubSub } from 'apollo-server'
++ import { createPubSub } from 'graphql-yoga'
+
+- export const pubSub = new PubSub()
++ export const pubSub = createPubSub()
+```
+
+<div class="mt-6">
+
+```js
+const Mutation = {
+  //...
+  async generateBill(parent, { id }, context) {
+    // Ça prend du temps...
+
+    pubSub.publish('BILL_GENERATED', { billGenerated: { id } })
+  },
+  //...
+}
+```
+
+</div>
+
+<style>
+.slidev-code code {
+  font-size: 140%;
+}
+</style>
+
+---
+
+# Subscriptions - PubSub
+
+```diff
+- import { withFilter } from 'apollo-server'
++ import { pipe, filter } from 'graphql-yoga'
+
+  const Subscription = {
+    billGenerated: {
+-     subscribe: withFilter(
+-       () => pubSub.asyncIterator('BILL_GENERATED'),
+-       (payload, variables) => payload.billGenerated.id === variables.id,
+-     ),
++     subscribe: pipe(
++       pubSub.subscribe('BILL_GENERATED'),
++       filter(
++         (payload, variables) => payload.billGenerated.id === variables.id,
++       ),
++     ),
+    },
+  }
+```
+
+<style>
+.slidev-code code {
+  font-size: 140%;
+}
+</style>
+
+---
 layout: bullets
 ---
 
@@ -731,7 +797,6 @@ ul {
 }
 </style>
 
----
 ---
 layout: intro
 class: background-clouds
