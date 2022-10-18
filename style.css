@@ -39,3 +39,11 @@ h1, h2, h3, p, ul {
 .background-clouds {
   background-image: url(background-clouds.jpg) !important;
 }
+
+:not(pre) > code {
+  background: none;
+}
+
+:not(pre) > code:before, :not(pre) > code:after {
+  content: none;
+}

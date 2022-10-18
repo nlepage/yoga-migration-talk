@@ -195,16 +195,9 @@ ul {
 
 # <img src="/envelop.svg" class="inline mr-2 w-12"> GraphQL Envelop - Plugins
 
- - `onPluginInit`
- - `onEnveloped`
- - `onParse`
- - `onValidate`
- - `onContext`
- - `useExtendedValidation`
- - `onExecute`
- - `onSubscribe`
- - `onSchemaChange`
- - ~~`onResolverCalled`~~ => `useOnResolve`
+<p class="text-center">
+  <img src="/envelop-lifecycle.png" class="inline w-200">
+</p>
 
 ---
 
@@ -394,15 +387,158 @@ code {
 layout: bullets
 ---
 
-# Adhérences avec Apollo Server
+# La vraie migration
 
- - Directives customs
+ - Directives customs ?
  - Subscriptions ?
- - Batch HTTP
+ - Batch HTTP ?
  - Resolvers génératrice ?!
 
 <style>
 ul {
+  font-size: 140%;
+}
+</style>
+
+---
+
+# Directives customs - Authentification
+
+```graphql {|1|2|3|}
+type Query @permission(permissions: "base") {
+  users(filter: UserFilter): [User!]! @permission(permissions: "admin")
+  version: String! @public
+}
+
+directive @permission(
+  permissions: [String!]!
+) on OBJECT | FIELD_DEFINITION
+
+directive @public on FIELD_DEFINITION
+```
+
+<style>
+code {
+  font-size: 140%;
+}
+</style>
+
+---
+
+# Directives customs - Authentification
+
+Implémentées grâce à `mapSchema` (anciennement `SchemaDirectiveVisitor`) de **GraphQL Tools**
+
+```js {|12-18}
+mapSchema(schema, {
+  [MapperKind.OBJECT_TYPE]: (type) => {
+    const directive = getDirective(schema, type, 'permission')?.[0]
+    // ...
+  },
+  [MapperKind.FIELD]: (field, fieldName) => {
+    const directive = getDirective(schema, field, 'permissions')?.[0]
+    if (!directive) return undefined
+
+    const { permissions } = directive
+
+    return { ...field, resolve: (parent, args, context, info) => {
+      const user = context.user
+
+      // Vérification des permissions...
+
+      return field.resolve(parent, args, context, info)
+    } }
+  },
+})
+```
+
+<style>
+.slidev-code code {
+  font-size: 130%;
+}
+</style>
+
+<!--
+ - User résolu au préalable dans fonction de contexte
+ - Mal aisé
+ - Défaut : Vérification au moment de l'exécution du resolver
+-->
+
+---
+
+# Plugin envelop `useGenericAuth`
+
+<p class="text-center">
+  <img src="/useGenericAuth.png" class="inline w-180">
+</p>
+
+ - `resolveUserFn` : Fonction de résolution de l'utilisateur
+ - `directiveOrExtensionFieldName` : Nom de directive ou de champ d'extension
+ - `validateUser` : Fonction de validation *custom*
+
+<style>
+ul {
+  font-size: 120%;
+}
+</style>
+
+<!--
+ - différents mode fonctionnement
+ - protect-granular
+-->
+
+---
+
+# Plugin envelop `useGenericAuth`
+
+```js {|11-14|16-19}
+mapSchema(schema, {
+  [MapperKind.OBJECT_TYPE]: (type) => {
+    const directive = getDirective(schema, type, 'permission')?.[0]
+    // ...
+  },
+  [MapperKind.OBJECT_FIELD]: (field, fieldName, typeName) => {
+    const directive = getDirective(schema, field, 'permission')?.[0]
+    const publicDirective = getDirective(schema, field, 'public')?.[0]
+    if (!directive && !publicDirective) return undefined
+
+    if (publicDirective) {
+      const { permissions, ...extensions } = field.extensions
+      return { ...field, extensions }
+    }
+
+    return {
+      ...field,
+      extensions: { ...field.extensions, permissions: directive.permissions },
+    }
+  },
+})
+```
+
+<style>
+.slidev-code code {
+  font-size: 130%;
+}
+</style>
+
+---
+
+# Plugin envelop `useGenericAuth`
+
+<p class="text-center">
+  <img src="/useCustomAuth.png" class="inline w-180">
+</p>
+
+```js
+const yoga = createYoga({
+  schema,
+  plugins: [useCustomAuth()],
+})
+```
+
+
+<style>
+.slidev-code code {
   font-size: 140%;
 }
 </style>
