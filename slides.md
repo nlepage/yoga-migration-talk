@@ -219,7 +219,7 @@ export const getEnveloped = envelop({
 ```
 
 <style>
-code {
+.slidev-code code {
   font-size: 140%;
 }
 </style>
@@ -247,7 +247,7 @@ const httpServer = createServer(async (req, res) => {
 ```
 
 <style>
-code {
+.slidev-code code {
   font-size: 140%;
 }
 </style>
@@ -277,7 +277,7 @@ res.end(JSON.stringify(result))
 ```
 
 <style>
-code {
+.slidev-code code {
   font-size: 140%;
 }
 </style>
@@ -339,7 +339,7 @@ server.listen(4000, () => {
 ```
 
 <style>
-code {
+.slidev-code code {
   font-size: 140%;
 }
 </style>
@@ -378,7 +378,7 @@ server.listen(4000)
 ```
 
 <style>
-code {
+.slidev-code code {
   font-size: 140%;
 }
 </style>
@@ -389,10 +389,23 @@ layout: bullets
 
 # La vraie migration
 
+<div v-click-hide>
+
  - Directives customs ?
  - Subscriptions ?
  - Batch HTTP ?
- - Resolvers génératrice ?!
+ - Resolvers génératrices ?!
+
+</div>
+
+<v-after>
+
+ - **Directives customs ?**
+ - Subscriptions ?
+ - Batch HTTP ?
+ - Resolvers génératrices ?!
+
+</v-after>
 
 <style>
 ul {
@@ -404,10 +417,12 @@ ul {
 
 # Directives customs - Authentification
 
-```graphql {|1|2|3|}
+```graphql {|1|3|4|}
 type Query @permission(permissions: "base") {
+  #...
   users(filter: UserFilter): [User!]! @permission(permissions: "admin")
   version: String! @public
+  #...
 }
 
 directive @permission(
@@ -418,7 +433,7 @@ directive @public on FIELD_DEFINITION
 ```
 
 <style>
-code {
+.slidev-code code {
   font-size: 140%;
 }
 </style>
@@ -536,6 +551,79 @@ const yoga = createYoga({
 })
 ```
 
+<style>
+.slidev-code code {
+  font-size: 140%;
+}
+</style>
+
+---
+layout: bullets
+---
+
+# La vraie migration
+
+ - **Directives customs ?**
+ - Subscriptions ?
+ - Batch HTTP ?
+ - Resolvers génératrices ?!
+
+<style>
+ul {
+  font-size: 140%;
+}
+</style>
+
+---
+
+# Directives customs - CRUD
+
+```graphql
+type Query {
+  # ...
+  pathway(id: Int!): Pathway @crud(name: "pathways", operation: "get", args: ":id")
+  #...
+}
+
+type Pathway {
+  # ...
+  units: [Unit!]! @crud(name: "units", operation: "find", args: "{ pathwayId: ':parent.id' }")
+  #...
+}
+
+directive @crud(
+  name: String!
+  operation: String!
+  args: [String!]
+) on FIELD_DEFINITION
+```
+
+<style>
+.slidev-code code {
+  font-size: 120%;
+}
+</style>
+
+---
+
+# Directives customs - CRUD
+
+```js
+export function addCrudResolvers(schema) {
+  return mapSchema(schema, {
+    [MapperKind.OBJECT_FIELD]: (field, fieldName) => {
+      const directive = getDirective(schema, field, 'crud')?.[0]
+      if (!directive) return undefined
+
+      const { name, operation, args: crudArgs } = directive
+
+      return { ...field, resolve: (parent, args, context) => {
+        // implémentation...
+      } }
+    },
+  })
+}
+```
 
 <style>
 .slidev-code code {
@@ -543,6 +631,107 @@ const yoga = createYoga({
 }
 </style>
 
+---
+
+# Directives customs - CRUD
+
+```js
+export function useCrud() {
+  return {
+    onSchemaChange({ schema, replaceSchema }) {
+      replaceSchema(addCrudResolvers(schema))
+    },
+  }
+}
+```
+
+<div class="mt-6">
+
+```js
+const yoga = createYoga({
+  schema,
+  plugins: [
+    useCustomAuth(),
+    useCrud(),
+  ],
+})
+```
+
+</div>
+
+<style>
+.slidev-code code {
+  font-size: 140%;
+}
+</style>
+
+---
+layout: bullets
+---
+
+# La vraie migration
+
+<div v-click-hide>
+
+ - **Directives customs 🗸**
+ - Subscriptions ?
+ - Batch HTTP ?
+ - Resolvers génératrices ?!
+
+</div>
+
+<v-after>
+
+ - Directives customs 🗸
+ - **Subscriptions ?**
+ - Batch HTTP ?
+ - Resolvers génératrices ?!
+
+</v-after>
+
+<style>
+ul {
+  font-size: 140%;
+}
+</style>
+
+---
+
+# Subscriptions
+
+TODO
+
+---
+layout: bullets
+---
+
+# La vraie migration
+
+<div v-click-hide>
+
+ - Directives customs 🗸
+ - **Subscriptions 🗸**
+ - Batch HTTP ?
+ - Resolvers génératrices ?!
+
+</div>
+
+<v-after>
+
+ - Directives customs 🗸
+ - Subscriptions 🗸
+ - **Batch HTTP ?**
+ - Resolvers génératrices ?!
+
+</v-after>
+
+<style>
+ul {
+  font-size: 140%;
+}
+</style>
+
+---
 ---
 layout: intro
 class: background-clouds

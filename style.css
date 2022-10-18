@@ -47,3 +47,7 @@ h1, h2, h3, p, ul {
 :not(pre) > code:before, :not(pre) > code:after {
   content: none;
 }
+
+.slidev-vclick-hidden {
+  display: none;
+}
