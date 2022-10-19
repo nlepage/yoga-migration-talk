@@ -123,7 +123,7 @@ layout: bullets
 
  - +100 queries, +100 mutations, +250 types
  - Quelques subscriptions
- - Upload de fichiers
+ - Uploads de fichiers
  - D'abord Apollo Server v1 puis v2
 
 <style>
@@ -395,7 +395,7 @@ layout: bullets
 
  - Directives customs ?
  - Subscriptions ?
- - Batch HTTP ?
+ - Batching HTTP ?
  - Resolvers génératrices ?!
 
 </div>
@@ -404,7 +404,7 @@ layout: bullets
 
  - **Directives customs ?**
  - Subscriptions ?
- - Batch HTTP ?
+ - Batching HTTP ?
  - Resolvers génératrices ?!
 
 </v-after>
@@ -567,7 +567,7 @@ layout: bullets
 
  - **Directives customs ?**
  - Subscriptions ?
- - Batch HTTP ?
+ - Batching HTTP ?
  - Resolvers génératrices ?!
 
 <style>
@@ -677,7 +677,7 @@ layout: bullets
 
  - **Directives customs 🗸**
  - Subscriptions ?
- - Batch HTTP ?
+ - Batching HTTP ?
  - Resolvers génératrices ?!
 
 </div>
@@ -686,7 +686,7 @@ layout: bullets
 
  - Directives customs 🗸
  - **Subscriptions ?**
- - Batch HTTP ?
+ - Batching HTTP ?
  - Resolvers génératrices ?!
 
 </v-after>
@@ -698,10 +698,34 @@ ul {
 </style>
 
 ---
+layout: bullets
+---
 
-# Subscriptions
+# Subscriptions - Quel protocole ?
 
-TODO
+ - WebSockets
+ - Server-Sent Events (SSE)
+
+<style>
+ul {
+  font-size: 140%;
+}
+</style>
+
+---
+layout: bullets
+---
+
+# Subscriptions - Yoga
+
+ - Uniquement SSE par défaut (http/2 recommandé)
+ - Web Sockets possible avec `graphql-ws`
+
+<style>
+ul {
+  font-size: 140%;
+}
+</style>
 
 ---
 
@@ -785,7 +809,7 @@ layout: bullets
 
  - Directives customs 🗸
  - **Subscriptions 🗸**
- - Batch HTTP ?
+ - Batching HTTP ?
  - Resolvers génératrices ?!
 
 </div>
@@ -794,7 +818,7 @@ layout: bullets
 
  - Directives customs 🗸
  - Subscriptions 🗸
- - **Batch HTTP ?**
+ - **Batching HTTP ?**
  - Resolvers génératrices ?!
 
 </v-after>
@@ -804,6 +828,192 @@ ul {
   font-size: 140%;
 }
 </style>
+
+---
+
+# Batching HTTP
+
+<p class="text-center">
+  <img src="/batch-1.png" class="inline w-110">
+</p>
+
+---
+
+# Batching HTTP
+
+<p class="text-center">
+  <img src="/batch-2.png" class="inline w-110">
+</p>
+
+---
+
+# Batching HTTP Yoga
+
+ - **À partir de Yoga v3**
+ - Compatible avec le Batching HTTP Link de Apollo Client
+
+<div class="mt-6">
+
+```js
+const yoga = createYoga({
+  schema,
+  plugins: [
+    useCustomAuth(),
+    useCrud(),
+  ],
+  batching: true,
+})
+```
+
+</div>
+
+<style>
+.slidev-code code {
+  font-size: 140%;
+}
+</style>
+
+---
+layout: bullets
+---
+
+# La vraie migration
+
+<div v-click-hide>
+
+ - Directives customs 🗸
+ - Subscriptions 🗸
+ - **Batching HTTP 🗸**
+ - Resolvers génératrices ?!
+
+</div>
+
+<v-after>
+
+ - Directives customs 🗸
+ - Subscriptions 🗸
+ - Batching HTTP 🗸
+ - **Resolvers génératrices ?!**
+
+</v-after>
+
+<style>
+ul {
+  font-size: 140%;
+}
+</style>
+
+---
+
+# Resolvers génératrices ?!
+
+```js {|3-5|11-13}
+const Query = {
+  // ...
+  * student(_, { id }) {
+    return yield crud.students.get(id)
+  }
+  // ...
+}
+
+const Mutation = {
+  // ...
+  * updateStudent(_, { studentInput }) {
+    return yield crud.students.update(studentInput)
+  }
+  // ...
+}
+```
+
+<style>
+.slidev-code code {
+  font-size: 140%;
+}
+</style>
+
+---
+layout: bullets
+---
+
+# Resolvers génératrices ?!
+
+ - Déduplication
+ - Batching
+ - Gestion du pool et des transactions Postgres
+
+<style>
+ul {
+  font-size: 140%;
+}
+</style>
+
+<!--
+ - Zoom sur postgres
+-->
+
+---
+
+# Gestion du pool et des transactions Postgres
+
+<p class="text-center">
+  <img src="/postgres-1.png" class="inline w-150">
+</p>
+
+
+---
+
+# Gestion du pool et des transactions Postgres
+
+<p class="text-center">
+  <img src="/postgres-2.png" class="inline w-150">
+</p>
+
+---
+
+# Plugins Yoga
+
+```ts
+export type Plugin = EnvelopPlugin & {
+  /**
+   * Use this hook with your own risk. It is still experimental and may change in the future.
+   * @internal
+   */
+  onRequest?: OnRequestHook<TServerContext>
+
+  /**
+   * Use this hook with your own risk. It is still experimental and may change in the future.
+   * @internal
+   */
+  onResponse?: OnResponseHook<TServerContext>
+}
+```
+
+<style>
+.slidev-code code {
+  font-size: 120%;
+}
+</style>
+
+---
+
+# La vraie migration
+
+<!--
+ - Dans le cadre de mon projet, la migration est réussie (même si c'est encore un WIP)
+ - Yoga et Envelop évoluent encore énormément
+ - Pas encore viable pour un gros projet ayant besoin de stabilité
+ - Bien pour un projet de taille petite/moyenne ou on veut essayer des choses
+ - Dire ce que j'ai aimé
+-->
+
+---
+
+# Conclusion
+
+<!--
+ - Ça tire l'écosystème vers le haut
+ - C'est prometteur
+-->
 
 ---
 layout: intro
