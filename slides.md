@@ -315,7 +315,7 @@ ul {
   - Playground
  - Facile à mettre en place
   - pas adhérence fmk http
-  - tt type env (lambdas aws, workers cloudfare, SSR Next.js)
+  - tt type env (Deno, lambdas aws, workers cloudfare, SSR Next.js)
 -->
 
 ---
@@ -509,49 +509,52 @@ ul {
 # Plugin envelop `useGenericAuth`
 
 ```js {|11-14|16-19}
-mapSchema(schema, {
-  [MapperKind.OBJECT_TYPE]: (type) => {
-    const directive = getDirective(schema, type, 'permission')?.[0]
-    // ...
-  },
-  [MapperKind.OBJECT_FIELD]: (field, fieldName, typeName) => {
-    const directive = getDirective(schema, field, 'permission')?.[0]
-    const publicDirective = getDirective(schema, field, 'public')?.[0]
-    if (!directive && !publicDirective) return undefined
+export function addAuthExtension(schema) {
+  return mapSchema(schema, {
+    [MapperKind.OBJECT_TYPE]: (type) => {
+      // ...
+    },
+    [MapperKind.OBJECT_FIELD]: (field, fieldName, typeName) => {
+      const directive = getDirective(schema, field, 'permission')?.[0]
+      const publicDirective = getDirective(schema, field, 'public')?.[0]
+      if (!directive && !publicDirective) return undefined
 
-    if (publicDirective) {
-      const { permissions, ...extensions } = field.extensions
-      return { ...field, extensions }
-    }
+      if (publicDirective) {
+        const { permissions, ...extensions } = field.extensions
+        return { ...field, extensions }
+      }
 
-    return {
-      ...field,
-      extensions: { ...field.extensions, permissions: directive.permissions },
-    }
-  },
-})
-```
-
-<style>
-.slidev-code code {
-  font-size: 130%;
+      return {
+        ...field,
+        extensions: { ...field.extensions, permissions: directive.permissions },
+      }
+    },
+  })
 }
-</style>
+```
 
 ---
 
 # Plugin envelop `useGenericAuth`
 
-<p class="text-center">
-  <img src="/useCustomAuth.png" class="inline w-180">
+<p class="text-center !mt-0" v-click-hide>
+  <img src="/useCustomAuth-1.png" class="inline w-180">
 </p>
+
+<p class="text-center !mt-0" v-after>
+  <img src="/useCustomAuth-2.png" class="inline w-180">
+</p>
+
+<div v-click>
 
 ```js
 const yoga = createYoga({
-  schema,
+  schema: addAuthExtension(schema),
   plugins: [useCustomAuth()],
 })
 ```
+
+</div>
 
 <style>
 .slidev-code code {
@@ -618,7 +621,6 @@ export function addCrudResolvers(schema) {
       if (!directive) return undefined
 
       const { name, operation, args: crudArgs } = directive
-
       return { ...field, resolve: (parent, args, context) => {
         // implémentation...
       } }
@@ -627,34 +629,13 @@ export function addCrudResolvers(schema) {
 }
 ```
 
-<style>
-.slidev-code code {
-  font-size: 140%;
-}
-</style>
-
----
-
-# Directives customs - CRUD
-
-```js
-export function useCrud() {
-  return {
-    onSchemaChange({ schema, replaceSchema }) {
-      replaceSchema(addCrudResolvers(schema))
-    },
-  }
-}
-```
-
-<div class="mt-6">
+<div class="mt-6" v-click>
 
 ```js
 const yoga = createYoga({
-  schema,
+  schema: addCrudResolvers(addAuthExtension(schema)),
   plugins: [
     useCustomAuth(),
-    useCrud(),
   ],
 })
 ```
@@ -663,7 +644,7 @@ const yoga = createYoga({
 
 <style>
 .slidev-code code {
-  font-size: 140%;
+  font-size: 130%;
 }
 </style>
 
@@ -834,7 +815,7 @@ ul {
 # Batching HTTP
 
 <p class="text-center">
-  <img src="/batch-1.png" class="inline w-110">
+  <img src="/batch-1.png" class="inline w-100">
 </p>
 
 ---
@@ -842,7 +823,7 @@ ul {
 # Batching HTTP
 
 <p class="text-center">
-  <img src="/batch-2.png" class="inline w-110">
+  <img src="/batch-2.png" class="inline w-100">
 </p>
 
 ---
@@ -856,10 +837,9 @@ ul {
 
 ```js
 const yoga = createYoga({
-  schema,
+  schema: addCrudResolvers(addAuthExtension(schema)),
   plugins: [
     useCustomAuth(),
-    useCrud(),
   ],
   batching: true,
 })
@@ -868,7 +848,7 @@ const yoga = createYoga({
 </div>
 
 <style>
-.slidev-code code {
+.slidev-code code, ul {
   font-size: 140%;
 }
 </style>
@@ -907,7 +887,7 @@ ul {
 
 # Resolvers génératrices ?!
 
-```js {|3-5|11-13}
+```js
 const Query = {
   // ...
   * student(_, { id }) {
@@ -932,8 +912,6 @@ const Mutation = {
 </style>
 
 ---
-layout: bullets
----
 
 # Resolvers génératrices ?!
 
@@ -941,8 +919,22 @@ layout: bullets
  - Batching
  - Gestion du pool et des transactions Postgres
 
+<div v-click class="mt-6">
+
+```js
+const yoga = createYoga({
+  schema: wrapGeneratorResolvers(addCrudResolvers(addAuthExtension(schema))),
+  plugins: [
+    useCustomAuth(),
+  ],
+  batching: true,
+})
+```
+
+</div>
+
 <style>
-ul {
+.slidev-code code, ul {
   font-size: 140%;
 }
 </style>
@@ -958,7 +950,6 @@ ul {
 <p class="text-center">
   <img src="/postgres-1.png" class="inline w-150">
 </p>
-
 
 ---
 
@@ -996,23 +987,83 @@ export type Plugin = EnvelopPlugin & {
 
 ---
 
-# La vraie migration
+# Gestion du pool et des transactions Postgres
 
-<!--
- - Dans le cadre de mon projet, la migration est réussie (même si c'est encore un WIP)
- - Yoga et Envelop évoluent encore énormément
- - Pas encore viable pour un gros projet ayant besoin de stabilité
- - Bien pour un projet de taille petite/moyenne ou on veut essayer des choses
- - Dire ce que j'ai aimé
--->
+<p class="text-center">
+  <img src="/usePostgres.png" class="inline w-200">
+</p>
 
 ---
 
-# Conclusion
+# Gestion du pool et des transactions Postgres
+
+```js
+const yoga = createYoga({
+  schema: wrapGeneratorResolvers(addCrudResolvers(addAuthExtension(schema))),
+  plugins: [
+    useCustomAuth(),
+    usePostgres(),
+  ],
+  batching: true,
+})
+```
+
+<style>
+.slidev-code code {
+  font-size: 140%;
+}
+</style>
+
+---
+layout: fact
+class: background-clouds
+---
+
+# Migration réussie ?
 
 <!--
- - Ça tire l'écosystème vers le haut
- - C'est prometteur
+ - Dans cadre projet, migration réussie
+ - encore un WIP, pas parfait
+   - subscriptions, sse pour cloud
+   - pour le reste OK
+   - même niveau fonctionnalité
+   - transparent frontend
+ - apprécié appuyer plugins et cycle de vie (authent, )
+ - bémol: m'attendais à extension schéma
+ - Pas encore viable pour un gros projet ayant besoin de stabilité
+ - Yoga et Envelop vont encore évoluer énormément, PROMETTEUR
+ - Bien pour un projet de taille petite/moyenne ou on veut essayer des choses
+-->
+
+---
+layout: bullets
+---
+
+# What's next ?
+
+ - Support de `@defer` et `@stream`
+ - Support officiel de Bun !
+
+<style>
+ul {
+  font-size: 140%;
+}
+</style>
+
+---
+
+# The Guild
+
+<p class="text-center">
+  <img src="/guild.png" class="inline w-150">
+</p>
+
+<!--
+groupe de développeurs opensource
+ne construit pas de produit
+projets restent la propriété de leur créateur
+
+tire l'écosystème vers le haut
 -->
 
 ---
