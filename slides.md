@@ -707,6 +707,14 @@ TODO
 
 # Subscriptions - PubSub
 
+<p class="text-center">
+  <img src="/pubSub.png" class="inline w-180">
+</p>
+
+---
+
+# Subscriptions - PubSub
+
 ```diff
 - import { PubSub } from 'apollo-server'
 + import { createPubSub } from 'graphql-yoga'
@@ -723,7 +731,7 @@ const Mutation = {
   async generateBill(parent, { id }, context) {
     // Ça prend du temps...
 
-    pubSub.publish('BILL_GENERATED', { billGenerated: { id } })
+    pubSub.publish('GENERATED_BILL', { generatedBill: { id } })
   },
   //...
 }
@@ -746,15 +754,15 @@ const Mutation = {
 + import { pipe, filter } from 'graphql-yoga'
 
   const Subscription = {
-    billGenerated: {
+    generatedBill: {
 -     subscribe: withFilter(
--       () => pubSub.asyncIterator('BILL_GENERATED'),
--       (payload, variables) => payload.billGenerated.id === variables.id,
+-       () => pubSub.asyncIterator('GENERATED_BILL'),
+-       (payload, variables) => payload.generatedBill.id === variables.id,
 -     ),
 +     subscribe: pipe(
-+       pubSub.subscribe('BILL_GENERATED'),
++       pubSub.subscribe('GENERATED_BILL'),
 +       filter(
-+         (payload, variables) => payload.billGenerated.id === variables.id,
++         (payload, variables) => payload.generatedBill.id === variables.id,
 +       ),
 +     ),
     },
