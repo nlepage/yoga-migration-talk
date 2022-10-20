@@ -31,7 +31,25 @@ class: background-leafs
 </p>
 
 <!--
-Namaste
+Bonjour à tous, Namaste,
+
+Rassurez-vous, je n'ai pas préparé une présentation sur le yoga.
+
+D'ailleurs là ça se sent peut-être mais je ne suis pas du tout détendu.
+
+"Comment j'ai largué Apollo Server pour GraphQL Yoga"
+
+Dans cette présentation, j'aimerais vous faire un retour d'expérience sur une migration de Apollo Server vers GraphQL Yoga.
+
+- Est-ce que Yoga est une alternative sérieuse à Apollo Server ?
+- Est-ce simple de migrer de l'un à l'autre ?
+- Yoga nous fait de belles promesses, ces promesses sont-elles tenues ?
+
+On va essayer de répondre à ces questions.
+
+*Se présenter*
+
+Cette migration de Apollo Server vers GraphQL Yoga, c'est un POC que j'ai réalisé sur un projet ▶
 -->
 
 ---
@@ -40,7 +58,6 @@ layout: bullets
 
 # Le projet
 
- - Démarré en 2017
  - Développé par Zenika Nantes
  - Pour l'Institut Catholique de Vendée
  - Application de gestion
@@ -51,6 +68,14 @@ ul {
 }
 </style>
 
+<!--
+ - Depuis 2017
+ - Petite équipe (2 à 4 développeurs)
+ - À destination équipes support de l'école (compta...)
+
+L'architecture technique du projet ▶
+-->
+
 ---
 
 # Le projet
@@ -60,7 +85,16 @@ ul {
 </p>
 
 <!--
- - Microservice au départ, inadapté pour petite équipe (overhead)
+- Frontends react (apollo client)
+- Interrogent API GraphQL
+- s'appuyait sur microservices au départ
+- inadapté pour petite équipe (overhead)
+- revenu à...
+- API monolithique, répond besoins tous frontends
+- stocke ses données Bdd postgres
+- précise, déploit sur kubernetes managé chez G cloud, sauf pg managé
+
+Petit rappel GraphQL ▶
 -->
 
 ---
@@ -84,6 +118,10 @@ query getStudents {
 ```
 
 ```graphql
+type Query {
+  students: [Students]!
+}
+
 type Student {
   id: ID!
   firstName: String!
@@ -91,11 +129,7 @@ type Student {
   grades: [Grade!]!
 }
 
-type Grade {
-  id: ID!
-  grade: Float!
-  subject: Subject!
-}
+# ...
 ```
 
 </div>
@@ -103,7 +137,6 @@ type Grade {
  - Langage de requêtage + Schéma
  - Environnement d'exécution
  - Spécification opensource
-
 
 <style>
 .slidev-code-wrapper {
@@ -114,6 +147,19 @@ ul {
   font-size: 140%;
 }
 </style>
+
+<!--
+ - langage req : permet client décrire...
+ - schéma : serveur décrire opérations possibles sur API
+ - différents type opérations
+ - permet validation requête
+ - env exec : coté serveur, s'appuie sur moteur graphql
+ - faire tout tas chose pour nous
+ - implémenter récupération donnée, sous forme fonctions, resolvers
+ - tout cela...
+
+Revenons à notre projet ▶
+-->
 
 ---
 layout: bullets
@@ -132,6 +178,16 @@ ul {
 }
 </style>
 
+<!--
+- Notre API Graphql, vue de l'extérieur
+- API taille moyenne
+- schéma comporte
+- également uploads, petite contrainte technique supplémentaire
+- ...migrée sur ApolloServer V2, sur lequel restée depuis
+
+si on replace dans historique des versions de apollo et de Yoga ▶
+-->
+
 ---
 
 # Historique de l'écosystème
@@ -141,11 +197,15 @@ ul {
 </p>
 
 <!--
- - Yoga v1 (Fully featured, file upload, subscriptions, playground)
- - pas passé sur Apollo 3
- - Mentionner express-graphql
+ - Yoga v1, petit projet oss (file upload, subscriptions, playground)
+ - hésité, mais Apollo v2 arrivé, migré dessus
+ - Yoga v1 maintenu pendant un temps, fini par mourir...
+ - 2020...
+ - Apollo v3, pas migré, manque temps, feature en moins...
+ - début 2022 arrivé yoga v2, nouvelle alternative Apollo...
+ - pour les dernières actus
 
-Transition sur Envelop ?
+Envelop ▶
 -->
 
 ---
@@ -165,8 +225,11 @@ ul {
 </style>
 
 <!--
- - 1ère release majeur en juillet 2021
- - plugins utilisables avec nimp quel framework de server ou schéma
+ - envelop yoga même créateurs
+ - 1ère release majeur en juillet même année
+ - plugins utilisables avec nimp quel fmk gql
+ - n'imp quel schéma, qque soit manière écrire (schema first...)
+ - m'imp quel fmk http, ne connaît pas http
 -->
 
 ---
@@ -178,9 +241,9 @@ ul {
 </p>
 
 <!--
+ - pas un moteur graphql
  - wrap pipeline execution
- - no http
- - flexibilité max
+ - permet plugins hook différentes phases
 -->
 
 ---
@@ -191,6 +254,10 @@ ul {
   <img src="/envelop-hub.png" class="inline w-180 shadow-lg">
 </p>
 
+<!--
+On peut également nous même construire plugins ▶
+-->
+
 ---
 
 # <img src="/envelop.svg" class="inline mr-2 w-12"> GraphQL Envelop - Plugins
@@ -198,6 +265,19 @@ ul {
 <p class="text-center">
   <img src="/envelop-lifecycle.png" class="inline w-200">
 </p>
+
+<!--
+ - onPluginInit : Créer plugins à partir autres plugins
+ - onSchemaChange : prévenu si change de schéma
+ - trio onParse, onValidate, onExecute/onSubscribe
+ - onEnveloped : initialisation du pipeline
+ - onContext : Construction du contexte
+ - useExtendedValidation : validation plus poussée appuyant sur contexte
+
+comment construire serveur avec envelop?
+
+exemple volontairement sans fmk avec node http ▶
+-->
 
 ---
 
@@ -226,6 +306,12 @@ export const getEnveloped = envelop({
 }
 </style>
 
+<!--
+début relativement simple
+
+getEnveloped permet créer pipeline exécution ▶
+-->
+
 ---
 
 # <img src="/envelop.svg" class="inline mr-2 w-12"> GraphQL Envelop - Construire un serveur
@@ -236,13 +322,15 @@ import { GraphQLError } from 'graphql'
 import { getEnveloped } from './envelop'
  
 const httpServer = createServer(async (req, res) => {
+  const initialContext = { req }
+
   const {
     parse,
     validate,
     contextFactory,
     execute,
-    schema
-  } = getEnveloped({ req })
+    schema,
+  } = getEnveloped(initialContext)
 
   // ...
 })
@@ -253,6 +341,10 @@ const httpServer = createServer(async (req, res) => {
   font-size: 140%;
 }
 </style>
+
+<!--
+ - Renvoie 4 fonctions dérouler exécution pipeline
+-->
 
 ---
 
@@ -285,8 +377,9 @@ res.end(JSON.stringify(result))
 </style>
 
 <!--
- - plus simple Helix
- - Trop bas niveau -> transition Yoga
+Et encore j'ai enlevé du code...
+
+Trop bas niveau -> enter Yoga ▶
 -->
 
 ---
@@ -309,13 +402,15 @@ ul {
 <!--
  - Lien Yoga v1
  - 1ère majeure fin mars
+ - actuellement v3 en beta
  - Fully featured
-  - Subscriptions out of the box
-  - Upload de fichier (sans ajout dépendance)
-  - Playground
+ - Subscriptions out of the box
+ - Upload de fichier (sans ajout dépendance)
+ - Playground
  - Facile à mettre en place
-  - pas adhérence fmk http
-  - tt type env (Deno, lambdas aws, workers cloudfare, SSR Next.js)
+ - Extensible (envelop)
+ - pas adhérence fmk http
+ - tt type env (Deno, lambdas aws, workers cloudfare, SSR Next.js)
 -->
 
 ---
@@ -347,7 +442,13 @@ server.listen(4000, () => {
 </style>
 
 <!--
-Alors c'est décidé ▶
+Alors on en revient à mon projet.
+
+Bien gentil de démarrer un petit serveur Yoga pour faire mumuse.
+
+J'ai eu envie de voir si je pouvais utiliser Yoga sur un vrai projet.
+
+Alors je me suis dit c'est décidé ▶
 -->
 
 ---
@@ -356,6 +457,14 @@ class: background-clouds
 ---
 
 # Je largue<br>Apollo Server !
+
+<!--
+Alors très bien, je vais dans la doc... je cherche...
+
+Oui il y a une page migration depuis Apollo Server.
+
+On me montre comment remplacer ApolloServer par Yoga.
+-->
 
 ---
 
@@ -384,6 +493,18 @@ class: background-clouds
   font-size: 140%;
 }
 </style>
+
+<!--
+Présenté comme ça, semble pas compliqué
+
+...
+
+On me propose également des solutions, si j'ai une intégration...
+
+Tombe bien, on utilise du Koa...
+
+D'accord, mais moi avec mon projet qui a 5 ans d'existence...
+-->
 
 ---
 layout: bullets
@@ -419,7 +540,7 @@ ul {
 
 # Directives customs - Authentification
 
-```graphql {|1|3|4|}
+```graphql {|1|3|4}
 type Query @permission(permissions: "base") {
   #...
   users(filter: UserFilter): [User!]! @permission(permissions: "admin")
@@ -439,6 +560,12 @@ directive @public on FIELD_DEFINITION
   font-size: 140%;
 }
 </style>
+
+<!--
+▶▶▶
+
+Pour faire fonctionner ces directives s'appuit sur graphql tools ▶
+-->
 
 ---
 
@@ -490,7 +617,6 @@ mapSchema(schema, {
 </p>
 
  - `resolveUserFn` : Fonction de résolution de l'utilisateur
- - `directiveOrExtensionFieldName` : Nom de directive ou de champ d'extension
  - `validateUser` : Fonction de validation *custom*
 
 <style>
@@ -533,6 +659,10 @@ export function addAuthExtension(schema) {
 }
 ```
 
+<!--
+Configurer le plugin useGenericAuth ▶
+-->
+
 ---
 
 # Plugin envelop `useGenericAuth`
@@ -561,6 +691,14 @@ const yoga = createYoga({
   font-size: 140%;
 }
 </style>
+
+<!--
+fais une erreur
+
+...
+
+et voilà j'ai maintenant la vérif mon authent qui se fait au moment validation étentue
+-->
 
 ---
 layout: bullets
